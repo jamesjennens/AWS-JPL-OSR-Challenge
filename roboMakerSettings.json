@@ -26,7 +26,7 @@
         "simulation": {
           "maxJobDurationInSeconds": 300,
           "failureBehavior": "Continue",
-          "iamRole": "arn:aws:iam::534587959798:role/robomaker-simulation-role"
+          "iamRole": "arn:aws:iam::534587959798:role/robomaker-simulation-role",
           "outputLocation": "mars-workshop1-us-west-2-rmw-assets",
           "tags": {}
         },
