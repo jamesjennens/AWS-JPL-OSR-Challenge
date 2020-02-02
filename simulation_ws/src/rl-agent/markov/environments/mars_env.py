@@ -308,7 +308,7 @@ class MarsEnv(gym.Env):
         self.get_distance_to_object() #<-- Also evaluate for sideswipe and collistion damage
         
         BUF.append((self.x,self.y))
-        BUF.pop()
+        BUF.pop(0)
 
         # Get the observation
         self.set_next_state()
