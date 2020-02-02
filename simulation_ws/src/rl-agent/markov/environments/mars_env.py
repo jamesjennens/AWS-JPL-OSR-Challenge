@@ -407,7 +407,7 @@ class MarsEnv(gym.Env):
                 return 0, True # No reward
             
             if abs(self.x - self.last_position_x) + abs(self.y-self.last_position_y) < 0.001:
-		print("Rover hasn't moved")
+		print("Rover has not moved")
 		return 0, True
 
             # Has the rover reached the max steps
