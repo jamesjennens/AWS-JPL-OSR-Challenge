@@ -307,12 +307,15 @@ class MarsEnv(gym.Env):
     def call_reward_function(self, action):
         self.get_distance_to_object() #<-- Also evaluate for sideswipe and collistion damage
         
+        BUF.append((self.x,self.y))
+        BUF.pop()
+
         # Get the observation
         self.set_next_state()
         
         # reduce power supply range
         self.power_supply_range = MAX_STEPS - self.steps
-        
+
         # calculate reward
         reward, done = self.reward_function()
 
@@ -342,9 +345,6 @@ class MarsEnv(gym.Env):
 
         self.last_position_x = self.x
         self.last_position_y = self.y
-
-        BUF.append((self.x,self.y))
-        BUF.pop()
 
 
 
