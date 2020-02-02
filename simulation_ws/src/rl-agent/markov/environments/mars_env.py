@@ -406,7 +406,7 @@ class MarsEnv(gym.Env):
                 print("Rover has collided with an object")
                 return 0, True # No reward
             
-            if abs(self.x - self.last_position_x) + abs(self.y-self.last_position_y) < 0.001:
+            if abs(self.x - self.last_position_x) + abs(self.y-self.last_position_y) < 0.01:
                 print("Rover has not moved")
                 return 0, True
 
