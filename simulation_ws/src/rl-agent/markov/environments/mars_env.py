@@ -41,7 +41,7 @@ IMG_QUEUE_BUF_SIZE = 1
 MAX_STEPS = 2000
 
 # Destination Point
-CHECKPOINT_X = 44.25
+CHECKPOINT_X = -44.25
 CHECKPOINT_Y = -4
 
 # Initial position of the robot
@@ -320,13 +320,15 @@ class MarsEnv(gym.Env):
 
         # Get average Imu reading
         if self.max_lin_accel_x > 0 or self.max_lin_accel_y > 0 or self.max_lin_accel_z > 0:
-            avg_imu = (self.max_lin_accel_x + self.max_lin_accel_y + self.max_lin_accel_y) / 3
+            avg_imu = (self.max_lin_accel_x + self.max_lin_accel_y + self.max_lin_accel_z) / 3
         else:
             avg_imu = 0
     
         print('Step:%.2f' % self.steps,
               'Steering:%f' % action[0],
               'R:%.2f' % reward,                                # Reward
+              'X:%.2f' % self.x,
+              'Y:%.2f' % self.y,
               'DTCP:%f' % self.current_distance_to_checkpoint,  # Distance to Check Point
               'DT:%f' % self.distance_travelled,                # Distance Travelled
               'CT:%.2f' % self.collision_threshold,             # Collision Threshold
@@ -410,7 +412,7 @@ class MarsEnv(gym.Env):
                 return 0, True # No reward
             
             # Has the Rover reached the destination
-            if self.last_position_x >= CHECKPOINT_X and self.last_position_y >= CHECKPOINT_Y:
+            if self.last_position_x <= CHECKPOINT_X and self.last_position_y <= CHECKPOINT_Y:
                 print("Congratulations! The rover has reached the checkpoint!")
                 multiplier = FINISHED_REWARD
                 reward = (base_reward * multiplier) / self.steps # <-- incentivize to reach checkpoint in fewest steps
@@ -522,8 +524,8 @@ class MarsEnv(gym.Env):
     '''
     def callback_wheel_lb(self, data):
         lin_accel_x = data.linear_acceleration.x
-        lin_accel_y = data.linear_acceleration.x
-        lin_accel_z = data.linear_acceleration.x
+        lin_accel_y = data.linear_acceleration.y
+        lin_accel_z = data.linear_acceleration.z
 
         if lin_accel_x > self.max_lin_accel_x:
             self.max_lin_accel_x = lin_accel_x
