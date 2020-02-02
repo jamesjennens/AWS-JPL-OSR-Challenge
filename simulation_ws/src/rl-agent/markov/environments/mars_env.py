@@ -54,6 +54,7 @@ INITIAL_ORIENT_Y = 0.040927747122
 INITIAL_ORIENT_Z = 0.0365547169101
 INITIAL_ORIENT_W = 0.998401800258
 
+BUF=[(-9,-9),(-9,-9),(-9,-9),(-9,-9),(-9,-9)]
 
 # Initial distance to checkpoint
 INITIAL_DISTANCE_TO_CHECKPOINT = abs(math.sqrt(((CHECKPOINT_X - INITIAL_POS_X) ** 2) +
@@ -342,6 +343,9 @@ class MarsEnv(gym.Env):
         self.last_position_x = self.x
         self.last_position_y = self.y
 
+        BUF.append((self.x,self.y))
+        BUF.pop()
+
 
 
     '''
@@ -367,8 +371,7 @@ class MarsEnv(gym.Env):
         GUIDERAILS_X_MAX = 1
         GUIDERAILS_Y_MIN = -6
         GUIDERAILS_Y_MAX = 4
-        
-        
+
         # WayPoints to checkpoint
         WAYPOINT_1_X = -10
         WAYPOINT_1_Y = -4
@@ -405,8 +408,10 @@ class MarsEnv(gym.Env):
             if self.collision:
                 print("Rover has collided with an object")
                 return 0, True # No reward
-            
-            if abs(self.x - self.last_position_x) + abs(self.y-self.last_position_y) < 0.005:
+
+            (x1,y1)=BUF[0]
+            (x2,y2)=BUF[4]
+            if abs(x1-x2) + abs(y1-y2) < 0.01:
                 print("Rover has not moved")
                 return 0, True
 
