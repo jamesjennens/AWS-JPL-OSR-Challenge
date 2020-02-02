@@ -31,7 +31,7 @@ TRAINING_IMAGE_HEIGHT = 120
 TRAINING_IMAGE_SIZE = (TRAINING_IMAGE_WIDTH, TRAINING_IMAGE_HEIGHT)
 
 LIDAR_SCAN_MAX_DISTANCE = 4.5  # Max distance Lidar scanner can measure
-CRASH_DISTANCE = 0.49  # Min distance to obstacle (The LIDAR is in the center of the 1M Rover)
+CRASH_DISTANCE = 0.8 #0.49  # Min distance to obstacle (The LIDAR is in the center of the 1M Rover)
 
 # Size of the image queue buffer, we want this to be one so that we consume 1 image
 # at a time, but may want to change this as we add more algorithms
@@ -406,6 +406,10 @@ class MarsEnv(gym.Env):
                 print("Rover has collided with an object")
                 return 0, True # No reward
             
+            if abs(self.x - self.last_position_x) + abs(self.y-self.last_position_y) < 0.001:
+		print("Rover hasn't moved")
+		return 0, True
+
             # Has the rover reached the max steps
             if self.power_supply_range < 1:
                 print("Rover's power supply has been drained (MAX Steps reached")
@@ -419,12 +423,12 @@ class MarsEnv(gym.Env):
                 return reward, True
             
             # If it has not reached the check point is it still on the map?
-            if self.x < (GUIDERAILS_X_MIN - .45) or self.x > (GUIDERAILS_X_MAX + .45):
+            if self.x < (GUIDERAILS_X_MIN + .45) or self.x > (GUIDERAILS_X_MAX - .45):
                 print("Rover has left the mission map!")
                 return 0, True
                 
                 
-            if self.y < (GUIDERAILS_Y_MIN - .45) or self.y > (GUIDERAILS_Y_MAX + .45):
+            if self.y < (GUIDERAILS_Y_MIN + .45) or self.y > (GUIDERAILS_Y_MAX - .45):
                 print("Rover has left the mission map!")
                 return 0, True
             
@@ -523,9 +527,9 @@ class MarsEnv(gym.Env):
     DO NOT EDIT - Function to receive IMU data from the Rover wheels
     '''
     def callback_wheel_lb(self, data):
-        lin_accel_x = data.linear_acceleration.x
-        lin_accel_y = data.linear_acceleration.y
-        lin_accel_z = data.linear_acceleration.z
+        lin_accel_x = abs(data.linear_acceleration.x)
+        lin_accel_y = abs(data.linear_acceleration.y)
+        lin_accel_z = abs(data.linear_acceleration.z)
 
         if lin_accel_x > self.max_lin_accel_x:
             self.max_lin_accel_x = lin_accel_x
