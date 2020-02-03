@@ -136,7 +136,7 @@
               "MARKOV_PRESET_FILE": "training_grounds.py",
               "MODEL_S3_BUCKET": "mars-workshop1-us-west-2-rmw-assets",
               "MODEL_S3_PREFIX": "mars2",
-	      "PRETRAINED_S3_BUCKET": "mars-workshop1-us-west-2-rmw-assets",
+              "PRETRAINED_S3_BUCKET": "mars-workshop1-us-west-2-rmw-assets",
               "PRETRAINED_S3_PREFIX": "pretrained",
               "ROS_AWS_REGION": "us-west-2"
             }
