@@ -369,7 +369,7 @@ class MarsEnv(gym.Env):
         
         GUIDERAILS_X_MIN = -46
         GUIDERAILS_X_MAX = 1
-        GUIDERAILS_Y_MIN = -6
+        GUIDERAILS_Y_MIN = -8
         GUIDERAILS_Y_MAX = 4
 
         # WayPoints to checkpoint
@@ -411,7 +411,7 @@ class MarsEnv(gym.Env):
 
             (x1,y1)=BUF[0]
             (x2,y2)=BUF[4]
-            if abs(x1-x2) + abs(y1-y2) < 0.01:
+            if abs(x1-x2) + abs(y1-y2) < 0.02:
                 print("Rover has not moved")
                 return 0, True
 
