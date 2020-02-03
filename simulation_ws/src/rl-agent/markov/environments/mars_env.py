@@ -370,7 +370,7 @@ class MarsEnv(gym.Env):
         GUIDERAILS_X_MIN = -46
         GUIDERAILS_X_MAX = 1
         GUIDERAILS_Y_MIN = -8
-        GUIDERAILS_Y_MAX = 4
+        GUIDERAILS_Y_MAX = 5
 
         # WayPoints to checkpoint
         WAYPOINT_1_X = -10
@@ -380,7 +380,7 @@ class MarsEnv(gym.Env):
         WAYPOINT_2_Y = 3
         
         WAYPOINT_3_X = -34
-        WAYPOINT_3_Y = 3
+        WAYPOINT_3_Y = -5
         
         # REWARD Multipliers
         FINISHED_REWARD = 10000
@@ -458,7 +458,7 @@ class MarsEnv(gym.Env):
                     reward = (WAYPOINT_2_REWARD * multiplier)/ self.steps # <-- incentivize to reach way-point in fewest steps
                     return reward, False
                     
-            if self.last_position_x <= WAYPOINT_3_X and self.last_position_y >= WAYPOINT_3_Y: # Rover is past the midpoint
+            if self.last_position_x <= WAYPOINT_3_X and self.last_position_y <= WAYPOINT_3_Y: # Rover is past the midpoint
                 # Determine if Rover already received one time reward for reaching this waypoint
                 if not self.reached_waypoint_3:  
                     self.reached_waypoint_3 = True
@@ -504,6 +504,7 @@ class MarsEnv(gym.Env):
                     multiplier = multiplier/2
                     
             reward = base_reward * multiplier
+            reward = 100*(self.old_dist - self.current_distance_to_checkpoint)-1
             
         
         return reward, done
@@ -577,6 +578,7 @@ class MarsEnv(gym.Env):
             self.closer_to_checkpoint = False
 
         # Update the distance to checkpoint
+        self.old_dist = self.current_distance_to_checkpoint
         self.current_distance_to_checkpoint = new_distance_to_checkpoint.data
 
         # update the current position
